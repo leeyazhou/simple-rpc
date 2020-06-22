@@ -16,6 +16,7 @@ import io.netty.handler.codec.ByteToMessageCodec;
  *
  */
 public class ProtocolCodec extends ByteToMessageCodec<Message> {
+	private static final int HEADER_LENGTH = 4 + 4 * 3;
 
 	private final byte PROTOCOL_CODE = (byte) 0;
 	private final byte TYPE_REQUEST = (byte) 0;
@@ -49,7 +50,7 @@ public class ProtocolCodec extends ByteToMessageCodec<Message> {
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		in.markReaderIndex();
-		if (in.readableBytes() < 6) {
+		if (in.readableBytes() < HEADER_LENGTH) {
 			in.resetReaderIndex();
 			return;
 		}
